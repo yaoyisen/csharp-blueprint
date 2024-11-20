@@ -13,9 +13,8 @@ namespace CSharpBlueprint.WinUI3.ViewModel
     public partial class DocumentViewModel(Document document) : ObservableObject, ITreeViewItem
     {
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Name))]
-        [NotifyPropertyChangedFor(nameof(Text))]
-        private Document document = document;
+        [NotifyPropertyChangedFor(nameof(Name), nameof(Text))]
+        private partial Document Document { get; set; } = document;
        
         public string Text
         {

@@ -31,7 +31,7 @@ namespace CSharpBlueprint.WinUI3
     {
 
         [ObservableProperty]
-        private SolutionViewModel? currentSolutionViewModel = null;
+        public partial SolutionViewModel? CurrentSolutionViewModel { get; private set; } = null;
 
 
         public MainPage()
