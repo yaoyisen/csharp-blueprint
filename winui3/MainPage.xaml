@@ -6,12 +6,12 @@
     xmlns:local="using:CSharpBlueprint.WinUI3"
     xmlns:vm="using:CSharpBlueprint.WinUI3.ViewModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    d:DataContext="{d:DesignInstance Type=vm:MainPageViewModel}"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <XamlUICommand x:Name="CreateEmptySolutionCommand" 
-                       ExecuteRequested="CreateEmptySolutionCommand_ExecuteRequested"/>
+
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <MenuBar Grid.Row="0">
             <MenuBarItem Title="开始">
-                <MenuFlyoutItem Text="Open..." Command="{StaticResource CreateEmptySolutionCommand}"/>
+                <MenuFlyoutItem Text="Open..." Command="{Binding CreateEmptySolutionCommand}"/>
                 <MenuFlyoutItem Text="Save"/>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Text="Exit"/>
@@ -31,7 +31,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0" ItemsSource="{x:Bind CurrentSolutionViewModel.Items, Mode=OneWay}">
+            <TreeView Name="SolutionResourceTree"
+                      Grid.Column="0" 
+                      ItemsSource="{Binding CurrentSolution.Projects, Mode=OneWay}"
+                      ItemInvoked="SolutionResourceTree_ItemInvoked">
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="vm:ITreeViewItem">
                         <TreeViewItem Content="{x:Bind Name}" ItemsSource="{x:Bind Items}"/>

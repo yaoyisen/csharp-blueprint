@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using CSharpBlueprint.WinUI3.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,9 +17,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace CSharpBlueprint.WinUI3
 {
@@ -32,8 +31,19 @@ namespace CSharpBlueprint.WinUI3
         /// </summary>
         public App()
         {
+            //register service
+            ServiceCollection services = new();
+            services.AddSingleton<MainWindow>(sp => new MainWindow() { Content = sp.GetService<MainPage>() });
+            services.AddSingleton<MainPage>(sp => new MainPage() { DataContext = sp.GetService<MainPageViewModel>() });
+            services.AddSingleton<MainPageViewModel>();
+            Services = services.BuildServiceProvider();
+
             this.InitializeComponent();
         }
+
+        public static new App Current => (App)Application.Current;
+
+        public IServiceProvider Services { get; private set; }
 
         /// <summary>
         /// Invoked when the application is launched.
@@ -41,8 +51,8 @@ namespace CSharpBlueprint.WinUI3
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
+            m_window = Services.GetService<MainWindow>();
+            m_window!.Activate();
         }
 
         private Window? m_window;

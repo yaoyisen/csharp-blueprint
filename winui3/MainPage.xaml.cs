@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CSharpBlueprint.WinUI3.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,23 +27,16 @@ namespace CSharpBlueprint.WinUI3
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
 
-    [INotifyPropertyChanged]
     public sealed partial class MainPage : Page
     {
-
-        [ObservableProperty]
-        public partial SolutionViewModel? CurrentSolutionViewModel { get; private set; } = null;
-
-
         public MainPage()
         {
             this.InitializeComponent();
         }
 
-        private void CreateEmptySolutionCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private void SolutionResourceTree_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
-            var workspace = Core.DataProvider.CreateEmptyWithTestData();
-            CurrentSolutionViewModel = new(workspace);
+
         }
     }
 }
