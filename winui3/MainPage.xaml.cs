@@ -29,14 +29,30 @@ namespace CSharpBlueprint.WinUI3
 
     public sealed partial class MainPage : Page
     {
+        private readonly MainPageViewModel ViewModel;
+
         public MainPage()
         {
             this.InitializeComponent();
+            this.ViewModel = App.Current.Services.GetService<MainPageViewModel>()!;
         }
+
+        public readonly string[] DisplayModeOptions = Enum.GetNames<DisplayMode>();
 
         private void SolutionResourceTree_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
+            if (args.InvokedItem is DocumentViewModel viewModel)
+            {
+                this.ViewModel.CurrentSelected = viewModel;
+            }
+        }
 
+        private void ChangeDisplayModeCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (args.Parameter is string name && Enum.TryParse(name, out DisplayMode result))
+            {
+                this.ViewModel.DisplayMode = result;
+            }
         }
     }
 }

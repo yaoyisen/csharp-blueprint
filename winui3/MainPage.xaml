@@ -7,11 +7,10 @@
     xmlns:vm="using:CSharpBlueprint.WinUI3.ViewModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    d:DataContext="{d:DesignInstance Type=vm:MainPageViewModel}"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-
+        <XamlUICommand x:Name="ChangeDisplayModeCommand" ExecuteRequested="ChangeDisplayModeCommand_ExecuteRequested"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -19,8 +18,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <MenuBar Grid.Row="0">
-            <MenuBarItem Title="开始">
-                <MenuFlyoutItem Text="Open..." Command="{Binding CreateEmptySolutionCommand}"/>
+            <MenuBarItem Title="Start">
+                <MenuFlyoutItem Text="Open..." Command="{x:Bind ViewModel.CreateEmptySolutionCommand}"/>
                 <MenuFlyoutItem Text="Save"/>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Text="Exit"/>
@@ -33,7 +32,7 @@
             </Grid.ColumnDefinitions>
             <TreeView Name="SolutionResourceTree"
                       Grid.Column="0" 
-                      ItemsSource="{Binding CurrentSolution.Projects, Mode=OneWay}"
+                      ItemsSource="{x:Bind ViewModel.CurrentSolution.Projects, Mode=OneWay}"
                       ItemInvoked="SolutionResourceTree_ItemInvoked">
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="vm:ITreeViewItem">
@@ -41,7 +40,22 @@
                     </DataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            <ContentControl Grid.Column="1"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <RadioButtons ItemsSource="{x:Bind DisplayModeOptions}" MaxColumns="2">
+                        <RadioButtons.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <RadioButton Content="{x:Bind}" Command="{StaticResource ChangeDisplayModeCommand}" CommandParameter="{x:Bind}"/>
+                            </DataTemplate>
+                        </RadioButtons.ItemTemplate>
+                    </RadioButtons>
+                </StackPanel>
+                <ContentPresenter Grid.Row="1" Content="{x:Bind ViewModel.CurrentDisplay, Mode=OneWay}"></ContentPresenter>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

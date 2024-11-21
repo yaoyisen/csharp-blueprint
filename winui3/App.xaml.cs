@@ -33,8 +33,8 @@ namespace CSharpBlueprint.WinUI3
         {
             //register service
             ServiceCollection services = new();
-            services.AddSingleton<MainWindow>(sp => new MainWindow() { Content = sp.GetService<MainPage>() });
-            services.AddSingleton<MainPage>(sp => new MainPage() { DataContext = sp.GetService<MainPageViewModel>() });
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainPage>();
             services.AddSingleton<MainPageViewModel>();
             Services = services.BuildServiceProvider();
 
