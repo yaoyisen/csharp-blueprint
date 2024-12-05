@@ -6,7 +6,7 @@
     xmlns:local="using:CSharpBlueprint.WinUI3"
     xmlns:vm="using:CSharpBlueprint.WinUI3.ViewModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CSharpBlueprint.WinUI3.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
@@ -44,9 +44,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <RadioButtons ItemsSource="{x:Bind DisplayModeOptions}" MaxColumns="2">
+                    <RadioButtons ItemsSource="{x:Bind DisplayModeOptions}" MaxColumns="2" SelectedIndex="0">
                         <RadioButtons.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <RadioButton Content="{x:Bind}" Command="{StaticResource ChangeDisplayModeCommand}" CommandParameter="{x:Bind}"/>
@@ -54,7 +55,8 @@
                         </RadioButtons.ItemTemplate>
                     </RadioButtons>
                 </StackPanel>
-                <ContentPresenter Grid.Row="1" Content="{x:Bind ViewModel.CurrentDisplay, Mode=OneWay}"></ContentPresenter>
+                <TextBox Grid.Row="1" Text="{x:Bind ViewModel.CurrentSelected.Text, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                <controls:BluePrintCanvas Grid.Row="2" Nodes="{x:Bind ViewModel.CurrentSelected.BluePrintNodes, Mode=OneWay}"/>
             </Grid>
         </Grid>
     </Grid>

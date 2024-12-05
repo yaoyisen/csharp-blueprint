@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CSharpBlueprint.WinUI3.Controls;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections;
@@ -13,7 +15,7 @@ namespace CSharpBlueprint.WinUI3.ViewModel
     public partial class DocumentViewModel(Document document) : ObservableObject, ITreeViewItem
     {
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Name), nameof(Text))]
+        [NotifyPropertyChangedFor(nameof(Name), nameof(Text), nameof(BluePrintNodes))]
         private partial Document Document { get; set; } = document;
        
         public string Text
@@ -28,5 +30,26 @@ namespace CSharpBlueprint.WinUI3.ViewModel
         public string Name => Document.Name;
 
         public IEnumerable<ITreeViewItem> Items => [];
+
+
+        public List<SyntaxNode> BluePrintNodes
+        {   
+            get
+            {
+                List<SyntaxNode> nodes = [];
+                SyntaxNode? syntaxRoot = Document.GetSyntaxRootAsync().Result;
+                if (syntaxRoot != null)
+                {
+                    if (syntaxRoot is CompilationUnitSyntax compilationUnitSyntax)
+                    {
+                        foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
+                        {
+                            nodes.Add(syntax);
+                        }
+                    }
+                }
+                return nodes;
+            }
+        }   
     }
 }

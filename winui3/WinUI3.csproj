@@ -13,6 +13,10 @@
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Controls\BluePrintCanvas.xaml" />
+    <None Remove="Controls\BluePrintNode.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -46,7 +50,17 @@
     <ProjectReference Include="..\core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\BluePrintNode.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\BluePrintCanvas.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
