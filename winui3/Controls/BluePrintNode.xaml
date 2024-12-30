@@ -11,18 +11,20 @@
         BorderBrush="Wheat" CornerRadius="4">
         <Grid>
             <!--<Grid Canvas.Left="{x:Bind Left, Mode=OneWay}" Canvas.Top="{x:Bind Top, Mode=OneWay}" Canvas.ZIndex="{x:Bind ZIndex, Mode=OneWay}">-->
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <TextBlock TextAlignment="Center" Text="{x:Bind Header}" Grid.Row="0"/>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <ListView x:Name="InputList"/>
-                <ListView x:Name="OutputList"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock TextAlignment="Center" Text="{x:Bind Header}" Grid.Row="0"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="InputList"/>
+                    <ListView x:Name="OutputList"/>
+                </Grid>
             </Grid>
         </Grid>
     </Border>

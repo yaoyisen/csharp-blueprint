@@ -7,9 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid>
-        <Canvas x:Name="Canvas">
+    <!--background makes ui able to drop on.-->
+    <Grid Background="Transparent">
+        <Canvas x:Name="Canvas" Background="Transparent">
             
         </Canvas>
     </Grid>

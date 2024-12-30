@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -29,6 +31,12 @@ namespace CSharpBlueprint.WinUI3.Controls
         public BluePrintNode(SyntaxNode syntax)
         {
             this.InitializeComponent();
+            this.CanDrag = true;
+            this.DragStarting += (s, e) =>
+            {
+                e.AllowedOperations = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+                e.Data.Properties.Add("node", this);
+            };
             if (syntax is ClassDeclarationSyntax classDeclarationSyntax)
             {
                 Header = classDeclarationSyntax.Identifier.ToString();
@@ -38,34 +46,6 @@ namespace CSharpBlueprint.WinUI3.Controls
         private string Header = "header";
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
-
-        public int Left
-        {
-            get { return (int)GetValue(LeftProperty); }
-            set { SetValue(LeftProperty, value); }
-        }
-        public static readonly DependencyProperty LeftProperty =
-            DependencyProperty.Register("Left", typeof(int), typeof(BluePrintNode), new PropertyMetadata(0));
-
-        public int Top
-        {
-            get { return (int)GetValue(TopProperty); }
-            set { SetValue(TopProperty, value); }
-        }
-
-        public static readonly DependencyProperty TopProperty =
-            DependencyProperty.Register("Top", typeof(int), typeof(BluePrintNode), new PropertyMetadata(0));
-
-        public int ZIndex
-        {
-            get { return (int)GetValue(ZIndexProperty); }
-            set { SetValue(ZIndexProperty, value); }
-        }
-
-        public static readonly DependencyProperty ZIndexProperty =
-            DependencyProperty.Register("ZIndex", typeof(int), typeof(BluePrintNode), new PropertyMetadata(0));
-
 
     }
 }
