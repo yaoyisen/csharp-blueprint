@@ -56,7 +56,11 @@
                     </RadioButtons>
                 </StackPanel>
                 <TextBox Grid.Row="1" Text="{x:Bind ViewModel.CurrentSelected.Text, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"/>
-                <controls:BluePrintCanvas Grid.Row="2" Nodes="{x:Bind ViewModel.CurrentSelected.BluePrintNodes, Mode=OneWay}"/>
+                <controls:BluePrintCanvas 
+                    DocumentVM="{x:Bind ViewModel.CurrentSelected, Mode=OneWay}"
+                    Nodes="{x:Bind ViewModel.CurrentSelected.BluePrintNodes, Mode=OneWay}"
+                    Grid.Row="2" 
+                    />
             </Grid>
         </Grid>
     </Grid>

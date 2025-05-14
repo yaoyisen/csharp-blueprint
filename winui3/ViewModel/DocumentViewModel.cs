@@ -1,14 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CSharpBlueprint.WinUI3.Controls;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpBlueprint.WinUI3.ViewModel
 {
@@ -17,13 +11,30 @@ namespace CSharpBlueprint.WinUI3.ViewModel
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Name), nameof(Text), nameof(BluePrintNodes))]
         private partial Document Document { get; set; } = document;
-       
+
+        //[ObservableProperty]
+        //[NotifyPropertyChangedFor(nameof(BluePrintNodes))]
+        //private partial List<SyntaxNode> PathNodes { get; set; } = [];
+
+        public SyntaxNode? CurrentNode
+        {
+            get => field;
+            set
+            {
+                SetProperty(ref field, value);
+                OnPropertyChanged(nameof(BluePrintNodes));
+            }
+        } = document.GetSyntaxRootAsync().Result;
+
         public string Text
         {
             get => Document.GetTextAsync().Result.ToString();
             set
             {
-                Document = Document.WithText(SourceText.From(value));
+                if (value != Text)
+                {
+                    Document = Document.WithText(SourceText.From(value));
+                }
             }
         }
 
@@ -33,23 +44,26 @@ namespace CSharpBlueprint.WinUI3.ViewModel
 
 
         public List<SyntaxNode> BluePrintNodes
-        {   
+        {
             get
             {
                 List<SyntaxNode> nodes = [];
-                SyntaxNode? syntaxRoot = Document.GetSyntaxRootAsync().Result;
-                if (syntaxRoot != null)
+                if (CurrentNode is CompilationUnitSyntax compilationUnitSyntax)
                 {
-                    if (syntaxRoot is CompilationUnitSyntax compilationUnitSyntax)
+                    foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
                     {
-                        foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
-                        {
-                            nodes.Add(syntax);
-                        }
+                        nodes.Add(syntax);
+                    }
+                }
+                else if (CurrentNode is ClassDeclarationSyntax classDeclarationSyntax)
+                {
+                    foreach (MemberDeclarationSyntax syntax in classDeclarationSyntax.Members)
+                    {
+                        nodes.Add(syntax);
                     }
                 }
                 return nodes;
             }
-        }   
+        }
     }
 }

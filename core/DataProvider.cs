@@ -1,6 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 namespace CSharpBlueprint.Core
@@ -9,7 +7,7 @@ namespace CSharpBlueprint.Core
     {
         public DataProvider()
         {
-            
+
         }
 
         static public AdhocWorkspace CreateEmpty()
@@ -22,7 +20,7 @@ namespace CSharpBlueprint.Core
 
         static public AdhocWorkspace CreateEmptyWithTestData()
         {
-            string code = "class A {}";
+            string code = "class A { public void Foo(int a) {}}";
             var workspace = CreateEmpty();
             string projectName = "NewProject";
             var project = workspace.AddProject(

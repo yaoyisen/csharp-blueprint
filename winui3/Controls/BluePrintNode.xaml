@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Border MinHeight="200" MinWidth="60" BorderThickness="2"
-        BorderBrush="Wheat" CornerRadius="4">
+        BorderBrush="Wheat" CornerRadius="4" DoubleTapped="Border_DoubleTapped">
         <Grid>
             <!--<Grid Canvas.Left="{x:Bind Left, Mode=OneWay}" Canvas.Top="{x:Bind Top, Mode=OneWay}" Canvas.ZIndex="{x:Bind ZIndex, Mode=OneWay}">-->
             <Grid>
@@ -22,7 +22,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="InputList"/>
+                    <ListView x:Name="InputList" ItemsSource="{x:Bind inputs, Mode=OneWay}"/>
                     <ListView x:Name="OutputList"/>
                 </Grid>
             </Grid>
