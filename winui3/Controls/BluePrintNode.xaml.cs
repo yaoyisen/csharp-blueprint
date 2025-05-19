@@ -28,22 +28,24 @@ namespace CSharpBlueprint.WinUI3.Controls
             Header = syntax.ToString();
             if (syntax is ClassDeclarationSyntax classDeclarationSyntax)
             {
-                Header = classDeclarationSyntax.Identifier.ToString();
+                Header = $"Class {classDeclarationSyntax.Identifier.ToString()}";
             }
-            if (syntax is MemberDeclarationSyntax memberDeclarationSyntax)
+            else if (syntax is MemberDeclarationSyntax memberDeclarationSyntax)
             {
                 Header = memberDeclarationSyntax.AttributeLists.ToString();
                 if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
                 {
                     Header = methodDeclarationSyntax.Identifier.ToString();
                     inputs = [.. methodDeclarationSyntax.ParameterList.Parameters];
+                    outputs = [methodDeclarationSyntax.ReturnType];
                 }
             }
         }
 
         private string Header = "header";
 
-        private List<SyntaxNode> inputs;
+        private List<SyntaxNode> inputs = [];
+        private List<SyntaxNode> outputs = [];
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

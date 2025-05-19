@@ -34,6 +34,7 @@ namespace CSharpBlueprint.WinUI3.ViewModel
                 if (value != Text)
                 {
                     Document = Document.WithText(SourceText.From(value));
+                    CurrentNode = Document.GetSyntaxRootAsync().Result;
                 }
             }
         }

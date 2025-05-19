@@ -22,8 +22,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="InputList" ItemsSource="{x:Bind inputs, Mode=OneWay}"/>
-                    <ListView x:Name="OutputList"/>
+                    <ListView x:Name="InputList" ItemsSource="{x:Bind inputs, Mode=OneWay}" Grid.Column="0"/>
+                    <ListView x:Name="OutputList" ItemsSource="{x:Bind outputs, Mode=OneWay}" Grid.Column="1"/>
                 </Grid>
             </Grid>
         </Grid>
