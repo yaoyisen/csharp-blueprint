@@ -12,9 +12,21 @@ namespace CSharpBlueprint.WinUI3.ViewModel
         [NotifyPropertyChangedFor(nameof(Name), nameof(Text), nameof(BluePrintNodes))]
         private partial Document Document { get; set; } = document;
 
-        //[ObservableProperty]
-        //[NotifyPropertyChangedFor(nameof(BluePrintNodes))]
-        //private partial List<SyntaxNode> PathNodes { get; set; } = [];
+        public List<SyntaxNode> BreadcrumbItems
+        {
+            get
+            {
+                List<SyntaxNode> items = [];
+                SyntaxNode? current = CurrentNode;
+                while (current != null)
+                {
+                    items.Add(current);
+                    current = current.Parent;
+                }
+                items.Reverse();
+                return items;
+            }
+        }
 
         public SyntaxNode? CurrentNode
         {
@@ -23,6 +35,7 @@ namespace CSharpBlueprint.WinUI3.ViewModel
             {
                 SetProperty(ref field, value);
                 OnPropertyChanged(nameof(BluePrintNodes));
+                OnPropertyChanged(nameof(BreadcrumbItems));
             }
         } = document.GetSyntaxRootAsync().Result;
 
@@ -41,7 +54,7 @@ namespace CSharpBlueprint.WinUI3.ViewModel
 
         public string Name => Document.Name;
 
-        public IEnumerable<ITreeViewItem> Items => [];
+        public IEnumerable<ITreeViewItem> ChildItems => [];
 
 
         public List<SyntaxNode> BluePrintNodes

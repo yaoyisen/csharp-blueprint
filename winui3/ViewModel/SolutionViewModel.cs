@@ -15,12 +15,12 @@ namespace CSharpBlueprint.WinUI3.ViewModel
         private readonly Workspace m_workspace = workspace;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Name), nameof(Projects), nameof(Items))]
+        [NotifyPropertyChangedFor(nameof(Name), nameof(Projects), nameof(ChildItems))]
         public partial Solution Solution { get; set; } = workspace.CurrentSolution;
 
         public IEnumerable<ProjectViewModel> Projects => Solution.Projects.Select(project => new ProjectViewModel(project));
 
-        public IEnumerable<ITreeViewItem> Items => Projects;
+        public IEnumerable<ITreeViewItem> ChildItems => Projects;
 
         public string Name => Solution.Id.Id.ToString();
 

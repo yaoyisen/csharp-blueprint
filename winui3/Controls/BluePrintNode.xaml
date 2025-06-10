@@ -6,11 +6,11 @@
     xmlns:local="using:CSharpBlueprint.WinUI3.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    DragStarting="BluePrintNode_DragStarting">
     <Border MinHeight="200" MinWidth="60" BorderThickness="2"
-        BorderBrush="Wheat" CornerRadius="4" DoubleTapped="Border_DoubleTapped">
+        BorderBrush="Wheat" CornerRadius="4" DoubleTapped="BluePrintNode_DoubleTapped">
         <Grid>
-            <!--<Grid Canvas.Left="{x:Bind Left, Mode=OneWay}" Canvas.Top="{x:Bind Top, Mode=OneWay}" Canvas.ZIndex="{x:Bind ZIndex, Mode=OneWay}">-->
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>

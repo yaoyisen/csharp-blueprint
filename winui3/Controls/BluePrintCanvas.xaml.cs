@@ -2,7 +2,6 @@ using CSharpBlueprint.WinUI3.ViewModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using System.Collections.Generic;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -16,24 +15,9 @@ namespace CSharpBlueprint.WinUI3.Controls
         {
             this.InitializeComponent();
             this.AllowDrop = true;
-            this.DragOver += (s, e) =>
-            {
-                if (e.DataView.Properties["node"] is UIElement node)
-                {
-                    e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
-                    e.DragUIOverride.IsContentVisible = false;
-                    var position = e.GetPosition(this);
-                    Canvas.SetTop(node, position.Y);
-                    Canvas.SetLeft(node, position.X);
-                    e.Handled = true;
-                }
-            };
+            this.DragOver += Canvas_DragOver;
         }
 
-        private void BluePrintCanvas_DragEnter(object sender, DragEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         public List<SyntaxNode> Nodes
         {
@@ -41,14 +25,12 @@ namespace CSharpBlueprint.WinUI3.Controls
             set
             {
                 SetValue(NodesProperty, value);
-                this.Canvas.Children.Clear();
-                foreach (var item in (List<SyntaxNode>)value)
+                Canvas.Children.Clear();
+                foreach (var item in value)
                 {
                     var a = new BluePrintNode(this, item);
-                    this.Canvas.Children.Add(a);
-
+                    Canvas.Children.Add(a);
                 }
-                //this.Canvas.Children.Add(new TextBlock() { Text = "123" });
             }
         }
 
@@ -66,6 +48,29 @@ namespace CSharpBlueprint.WinUI3.Controls
             DependencyProperty.Register("DocumentVM", typeof(DocumentViewModel), typeof(BluePrintCanvas), new PropertyMetadata(null));
 
 
+        #region event handler
 
+        private void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            if (args.Item is SyntaxNode syntaxNode)
+            {
+                DocumentVM.CurrentNode = syntaxNode;
+            }
+        }
+
+        private void Canvas_DragOver(object sender, DragEventArgs args)
+        {
+            if (args.DataView.Properties["node"] is UIElement node)
+            {
+                args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+                args.DragUIOverride.IsContentVisible = false;
+                var position = args.GetPosition(Canvas);
+                Canvas.SetTop(node, position.Y);
+                Canvas.SetLeft(node, position.X);
+                args.Handled = true;
+            }
+        }
+
+        #endregion event handler
     }
 }

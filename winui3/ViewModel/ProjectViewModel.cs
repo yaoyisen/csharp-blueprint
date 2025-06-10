@@ -13,11 +13,11 @@ namespace CSharpBlueprint.WinUI3.ViewModel
     public partial class ProjectViewModel(Project project) : ObservableObject, ITreeViewItem
     {
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Name), nameof(Documents), nameof(Items))]
+        [NotifyPropertyChangedFor(nameof(Name), nameof(Documents), nameof(ChildItems))]
         private partial Project Project { get; set; } = project;
 
         public IEnumerable<DocumentViewModel> Documents => Project.Documents.Select(doc => new DocumentViewModel(doc));
-        public IEnumerable<ITreeViewItem> Items => Documents;
+        public IEnumerable<ITreeViewItem> ChildItems => Documents;
         public string Name => Project.Name;
     }
 }

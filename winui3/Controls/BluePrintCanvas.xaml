@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UserControl
-    x:Class="CSharpBlueprint.WinUI3.Controls.BluePrintCanvas"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CSharpBlueprint.WinUI3.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:viewmodel="using:CSharpBlueprint.WinUI3.ViewModel" 
-    d:DataContext="{d:DesignInstance Type=viewmodel:DocumentViewModel}"
+<UserControl  
+    x:Class="CSharpBlueprint.WinUI3.Controls.BluePrintCanvas"  
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+    xmlns:local="using:CSharpBlueprint.WinUI3.Controls"  
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
+    xmlns:viewmodel="using:CSharpBlueprint.WinUI3.ViewModel"   
+    xmlns:CodeAnalysis ="using:Microsoft.CodeAnalysis"  
+    d:DataContext="{d:DesignInstance Type=viewmodel:DocumentViewModel}"  
     mc:Ignorable="d">
     <!--background makes ui able to drop on.-->
     <Grid Background="Transparent">
-        <Canvas x:Name="Canvas" Background="Transparent">
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <BreadcrumbBar ItemsSource="{x:Bind DocumentVM.BreadcrumbItems, Mode=OneWay}" ItemClicked="BreadcrumbBar_ItemClicked" Grid.Row="0">
+            <BreadcrumbBar.ItemTemplate>
+                <DataTemplate x:DataType="CodeAnalysis:SyntaxNode">
+                    <TextBlock Text="{x:Bind local:Utils.GetSyntaxNodeName((CodeAnalysis:SyntaxNode)) }"/>
+                </DataTemplate>
+            </BreadcrumbBar.ItemTemplate>
+        </BreadcrumbBar>
+        <Canvas x:Name="Canvas" Background="Transparent" Grid.Row="1" DragOver="Canvas_DragOver">
+
         </Canvas>
     </Grid>
 </UserControl>

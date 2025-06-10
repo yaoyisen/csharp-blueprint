@@ -36,7 +36,7 @@
                       ItemInvoked="SolutionResourceTree_ItemInvoked">
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="vm:ITreeViewItem">
-                        <TreeViewItem Content="{x:Bind Name}" ItemsSource="{x:Bind Items}"/>
+                        <TreeViewItem Content="{x:Bind Name}" ItemsSource="{x:Bind ChildItems}"/>
                     </DataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>

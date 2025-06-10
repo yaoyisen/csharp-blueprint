@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,23 +13,23 @@ namespace CSharpBlueprint.WinUI3.Controls
 
     public sealed partial class BluePrintNode : UserControl, INotifyPropertyChanged
     {
-        private BluePrintCanvas _canvas;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private BluePrintCanvas _parentCanvas;
         private SyntaxNode _syntax;
+        private string Header = "header";
+
+        private List<SyntaxNode> inputs = [];
+        private List<SyntaxNode> outputs = [];
         public BluePrintNode(BluePrintCanvas canvas, SyntaxNode syntax)
         {
             this.InitializeComponent();
             this.CanDrag = true;
-            this._canvas = canvas;
+            this._parentCanvas = canvas;
             this._syntax = syntax;
-            this.DragStarting += (s, e) =>
-            {
-                e.AllowedOperations = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
-                e.Data.Properties.Add("node", this);
-            };
             Header = syntax.ToString();
             if (syntax is ClassDeclarationSyntax classDeclarationSyntax)
             {
-                Header = $"Class {classDeclarationSyntax.Identifier.ToString()}";
+                Header = $"Class {classDeclarationSyntax.Identifier}";
             }
             else if (syntax is MemberDeclarationSyntax memberDeclarationSyntax)
             {
@@ -42,16 +43,22 @@ namespace CSharpBlueprint.WinUI3.Controls
             }
         }
 
-        private string Header = "header";
 
-        private List<SyntaxNode> inputs = [];
-        private List<SyntaxNode> outputs = [];
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        #region event handler
 
-        private void Border_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        private void BluePrintNode_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
-            _canvas.DocumentVM.CurrentNode = _syntax;
+            _parentCanvas.DocumentVM.BreadcrumbItems.Add(_syntax);
+            _parentCanvas.DocumentVM.CurrentNode = _syntax;
         }
+
+        private void BluePrintNode_DragStarting(UIElement sender, DragStartingEventArgs e)
+        {
+            e.AllowedOperations = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+            e.Data.Properties.Add("node", this);
+        }
+
+        #endregion event handler
     }
 }
