@@ -23,7 +23,7 @@
                 </DataTemplate>
             </BreadcrumbBar.ItemTemplate>
         </BreadcrumbBar>
-        <Canvas x:Name="Canvas" Background="Transparent" Grid.Row="1" DragOver="Canvas_DragOver">
+        <Canvas x:Name="Canvas" Background="Transparent" Grid.Row="1">
 
         </Canvas>
     </Grid>

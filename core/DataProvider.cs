@@ -20,7 +20,15 @@ namespace CSharpBlueprint.Core
 
         static public AdhocWorkspace CreateEmptyWithTestData()
         {
-            string code = "class A { public void Foo(int a) {}}";
+            string code = "" +
+                "class A {\n" +
+                "   public int Foo(int a) \n" +
+                "   {\n" +
+                "       int c = 3;\n" +
+                "       int b = 2;\n" +
+                "       return a + b;\n" +
+                "   }\n" +
+                "}\n";
             var workspace = CreateEmpty();
             string projectName = "NewProject";
             var project = workspace.AddProject(

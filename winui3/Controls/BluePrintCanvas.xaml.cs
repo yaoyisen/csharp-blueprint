@@ -1,8 +1,9 @@
+using CSharpBlueprint.WinUI3.Controls.Slots;
 using CSharpBlueprint.WinUI3.ViewModel;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -13,29 +14,42 @@ namespace CSharpBlueprint.WinUI3.Controls
     {
         public BluePrintCanvas()
         {
-            this.InitializeComponent();
-            this.AllowDrop = true;
-            this.DragOver += Canvas_DragOver;
+            InitializeComponent();
+            AllowDrop = true;
+            DragOver += Canvas_DragOver;
         }
 
-
-        public List<SyntaxNode> Nodes
+        public void ConnentSlot(NodeSlot s1, NodeSlot s2)
         {
-            get { return (List<SyntaxNode>)GetValue(NodesProperty); }
+            BindableBezierPath path = new(s1.BindPoint, s2.BindPoint);
+            Canvas.Children.Add(path);
+        }
+
+        public SyntaxNode CurrentNode
+        {
+            get { return (SyntaxNode)GetValue(CurrentNodeProperty); }
             set
             {
-                SetValue(NodesProperty, value);
+                SetValue(CurrentNodeProperty, value);
                 Canvas.Children.Clear();
-                foreach (var item in value)
+                if (value is CompilationUnitSyntax compilationUnitSyntax)
                 {
-                    var a = new BluePrintNode(this, item);
-                    Canvas.Children.Add(a);
+                    CompilationUnitSyntax(compilationUnitSyntax);
+                }
+                else if (value is ClassDeclarationSyntax classDeclarationSyntax)
+                {
+                    ClassDeclarationSyntax(classDeclarationSyntax);
+                }
+                else if (value is MethodDeclarationSyntax methodDeclarationSyntax)
+                {
+                    MethodDeclarationSyntax(methodDeclarationSyntax);
                 }
             }
         }
 
-        public static readonly DependencyProperty NodesProperty =
-            DependencyProperty.Register("Nodes", typeof(List<SyntaxNode>), typeof(BluePrintCanvas), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty CurrentNodeProperty =
+            DependencyProperty.Register("Nodes", typeof(SyntaxNode), typeof(BluePrintCanvas), new PropertyMetadata(null));
 
 
         public DocumentViewModel DocumentVM
@@ -46,6 +60,72 @@ namespace CSharpBlueprint.WinUI3.Controls
 
         public static readonly DependencyProperty DocumentVMProperty =
             DependencyProperty.Register("DocumentVM", typeof(DocumentViewModel), typeof(BluePrintCanvas), new PropertyMetadata(null));
+
+
+        #region content generator
+
+        private void CompilationUnitSyntax(CompilationUnitSyntax syntax)
+        {
+            double left = 0;
+            foreach (MemberDeclarationSyntax member in syntax.Members)
+            {
+                var node = new BluePrintNode(this, member);
+                node.Left += left += 20;
+                Canvas.Children.Add(node);
+            }
+        }
+
+        private void ClassDeclarationSyntax(ClassDeclarationSyntax syntax)
+        {
+            double left = 0;
+            foreach (MemberDeclarationSyntax member in syntax.Members)
+            {
+                var node = new BluePrintNode(this, member);
+                node.Left += left += 20;
+                Canvas.Children.Add(node);
+            }
+        }
+
+        private void MethodDeclarationSyntax(MethodDeclarationSyntax syntax)
+        {
+            double left = 0;
+            foreach (var parameterSyntax in syntax.ParameterList.Parameters)
+            {
+                var node = new BluePrintNode(this, parameterSyntax);
+                node.Left += left += 120;
+                Canvas.Children.Add(node);
+            }
+            if (syntax.Body is not null)
+            {
+                BluePrintNode? last = null;
+                foreach (var statementSyntax in syntax.Body.Statements)
+                {
+                    var node = new BluePrintNode(this, statementSyntax);
+                    if (last != null)
+                    {
+                        NodeSlot lastSlot = new NodeSlot(last);
+                        last.outputs.Add(lastSlot);
+                        NodeSlot nodeSlot = new NodeSlot(node);
+                        node.inputs.Add(nodeSlot);
+                        ConnentSlot(lastSlot, nodeSlot);
+                    }
+                    last = node;
+                    node.Left += left += 120;
+                    Canvas.Children.Add(node);
+                }
+            }
+            if (syntax.ReturnType is not null)
+            {
+                var node = new BluePrintNode(this, syntax.ReturnType);
+                node.Left += left += 120;
+                Canvas.Children.Add(node);
+            }
+        }
+
+
+
+
+        #endregion content generator
 
 
         #region event handler
@@ -60,13 +140,13 @@ namespace CSharpBlueprint.WinUI3.Controls
 
         private void Canvas_DragOver(object sender, DragEventArgs args)
         {
-            if (args.DataView.Properties["node"] is UIElement node)
+            if (args.DataView.Properties["node"] is BluePrintNode node)
             {
                 args.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
                 args.DragUIOverride.IsContentVisible = false;
                 var position = args.GetPosition(Canvas);
-                Canvas.SetTop(node, position.Y);
-                Canvas.SetLeft(node, position.X);
+                node.Left = position.X;
+                node.Top = position.Y;
                 args.Handled = true;
             }
         }

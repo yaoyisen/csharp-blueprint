@@ -76,6 +76,24 @@ namespace CSharpBlueprint.WinUI3.ViewModel
                         nodes.Add(syntax);
                     }
                 }
+                else if (CurrentNode is MethodDeclarationSyntax methodDeclarationSyntax)
+                {
+                    foreach (var parameterSyntax in methodDeclarationSyntax.ParameterList.Parameters)
+                    {
+                        nodes.Add(parameterSyntax);
+                    }
+                    if (methodDeclarationSyntax.Body is not null)
+                    {
+                        foreach (var statementSyntax in methodDeclarationSyntax.Body.Statements)
+                        {
+                            nodes.Add(statementSyntax);
+                        }
+                    }
+                    if (methodDeclarationSyntax.ReturnType is not null)
+                    {
+                        nodes.Add(methodDeclarationSyntax.ReturnType);
+                    }
+                }
                 return nodes;
             }
         }
